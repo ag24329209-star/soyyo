@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santiago — Conóceme</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=Lora:ital,wght@0,400;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #15151e;
+    --border: rgba(255,255,255,0.07);
+    --text: #e8e4f0;
+    --muted: #7a7490;
+    --accent1: #b19cd9;
+    --accent2: #7ec8c8;
+    --accent3: #f0c4a8;
+    --glow: rgba(177,156,217,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+    animation: drift 20s infinite alternate ease-in-out;
+  }
+  .orb1 { width:500px;height:500px;background:radial-gradient(circle,rgba(177,156,217,0.12),transparent 70%);top:-100px;left:-100px;animation-duration:25s; }
+  .orb2 { width:400px;height:400px;background:radial-gradient(circle,rgba(126,200,200,0.08),transparent 70%);bottom:100px;right:-80px;animation-duration:18s;animation-delay:-8s; }
+  .orb3 { width:300px;height:300px;background:radial-gradient(circle,rgba(240,196,168,0.07),transparent 70%);top:50%;left:40%;animation-duration:30s;animation-delay:-15s; }
+
+  @keyframes drift {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(40px,60px) scale(1.1); }
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 24px;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .hero-eyebrow {
+    font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.3em;color:var(--accent1);text-transform:uppercase;margin-bottom:28px;opacity:0;animation:fadeUp 0.8s 0.2s forwards;
+  }
+  .hero-name {
+    font-family:'Playfair Display',serif;font-size:clamp(5rem,18vw,13rem);font-weight:700;line-height:0.9;letter-spacing:-0.03em;
+    background:linear-gradient(135deg,#e8e4f0 0%,var(--accent1) 50%,var(--accent2) 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    opacity:0;animation:fadeUp 0.9s 0.4s forwards;
+  }
+  .hero-age {
+    font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--muted);letter-spacing:0.15em;margin-top:20px;opacity:0;animation:fadeUp 0.8s 0.6s forwards;
+  }
+  .hero-tagline {
+    font-family:'Lora',serif;font-style:italic;font-size:clamp(1rem,2.5vw,1.3rem);color:var(--muted);max-width:580px;margin-top:36px;line-height:1.7;opacity:0;animation:fadeUp 0.8s 0.8s forwards;
+  }
+  .hero-tagline span { color:var(--accent3);font-style:normal; }
+
+  /* Guiño eclipse en hero — una pequeña luna creciente sutil */
+  .hero-moon {
+    position:absolute;top:32px;right:40px;width:22px;height:22px;
+    border-radius:50%;box-shadow: inset -6px 0 0 0 rgba(177,156,217,0.35);
+    opacity:0.4;
+    animation:fadeUp 1s 1.6s forwards, moonPulse 6s 2.6s infinite;
+  }
+  @keyframes moonPulse {
+    0%,100%{opacity:0.35} 50%{opacity:0.65}
+  }
+
+  .scroll-hint {
+    position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 0.8s 1.4s forwards;
+  }
+  .scroll-hint span { font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;color:var(--muted);text-transform:uppercase; }
+  .scroll-line { width:1px;height:48px;background:linear-gradient(to bottom,var(--accent1),transparent);animation:scrollPulse 2s infinite; }
+  @keyframes scrollPulse { 0%,100%{opacity:0.3;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.2)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* SECTIONS */
+  section {
+    position:relative;z-index:1;padding:80px 24px;max-width:900px;margin:0 auto;
+  }
+  .section-label {
+    font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.3em;color:var(--accent1);text-transform:uppercase;margin-bottom:40px;display:flex;align-items:center;gap:16px;
+  }
+  .section-label::after { content:'';flex:1;height:1px;background:var(--border); }
+  .section-title {
+    font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:400;line-height:1.2;margin-bottom:32px;color:var(--text);
+  }
+  .section-title em { font-style:italic;color:var(--accent1); }
+  p { font-size:1.05rem;line-height:1.85;color:#c5bfd6;margin-bottom:20px; }
+
+  .quote-block {
+    border-left:2px solid var(--accent1);padding:20px 32px;margin:48px 0;
+    background:linear-gradient(135deg,rgba(177,156,217,0.05),transparent);border-radius:0 8px 8px 0;
+  }
+  .quote-block blockquote {
+    font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.1rem,2.5vw,1.4rem);line-height:1.6;color:var(--text);
+  }
+  .quote-block cite { display:block;margin-top:12px;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;color:var(--muted);font-style:normal; }
+
+  /* VALUES */
+  .values-grid {
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1px;
+    border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:40px;background:var(--border);
+  }
+  .value-item { background:var(--card);padding:28px 24px;transition:background 0.3s;display:flex;flex-direction:column;gap:8px; }
+  .value-item:hover { background:var(--surface); }
+  .value-icon { font-size:1.4rem;line-height:1; }
+  .value-name { font-family:'Playfair Display',serif;font-size:1rem;font-weight:400;color:var(--text); }
+
+  /* MUSIC */
+  .music-card {
+    background:var(--card);border:1px solid var(--border);border-radius:16px;padding:36px;margin-top:40px;position:relative;overflow:hidden;
+  }
+  .music-card::before { content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(126,200,200,0.06),transparent 60%); }
+  .music-card-header { display:flex;align-items:center;gap:20px;margin-bottom:24px; }
+  .vinyl {
+    width:56px;height:56px;border-radius:50%;
+    background:conic-gradient(from 0deg,#1a1a24,#2a2a38,#1a1a24,#2a2a38);
+    border:2px solid var(--accent2);display:flex;align-items:center;justify-content:center;
+    animation:spin 8s linear infinite;flex-shrink:0;
+  }
+  .vinyl::after { content:'';width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--accent2); }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .music-info h3 { font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--text); }
+  .music-info span { font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--accent2);letter-spacing:0.1em; }
+  .music-desc { font-size:0.97rem;color:var(--muted);line-height:1.7; }
+
+  /* SPOTIFY CARD */
+  .spotify-card {
+    margin-top:28px;border-radius:16px;overflow:hidden;
+    border:1px solid rgba(126,200,200,0.2);
+    box-shadow:0 0 40px rgba(126,200,200,0.06);
+    position:relative;
+  }
+  /* Guiño eclipse: sombra de luna en esquina inferior */
+  .spotify-card::after {
+    content:'🌒';position:absolute;bottom:14px;right:18px;
+    font-size:1rem;opacity:0.18;pointer-events:none;
+  }
+  .spotify-label {
+    font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;
+    color:var(--accent2);text-transform:uppercase;margin-bottom:14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .spotify-label::before { content:'♪';font-size:0.9rem; }
+  .spotify-caption {
+    font-family:'Lora',serif;font-style:italic;font-size:0.97rem;
+    color:#c5bfd6;line-height:1.75;margin-bottom:20px;
+  }
+  /* Guiño eclipse sutil en la caption — asterisco en forma de estrella */
+  .eclipse-star {
+    color:var(--accent1);opacity:0.5;font-size:0.7rem;vertical-align:super;
+  }
+
+  /* VIDEO */
+  .video-wrapper {
+    position:relative;width:100%;padding-bottom:56.25%;border-radius:14px;overflow:hidden;
+    border:1px solid var(--border);margin-top:40px;
+    box-shadow: 0 0 60px rgba(177,156,217,0.08);
+  }
+  .video-wrapper iframe { position:absolute;top:0;left:0;width:100%;height:100%;border:none; }
+
+  /* ESTE MES */
+  .este-mes {
+    background:linear-gradient(135deg,rgba(177,156,217,0.06),rgba(126,200,200,0.03));
+    border:1px solid rgba(177,156,217,0.15);
+    border-radius:16px;
+    padding:40px;
+    margin-top:40px;
+    position:relative;
+    overflow:hidden;
+  }
+  .este-mes::before {
+    content:'';
+    position:absolute;top:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent,var(--accent1),transparent);
+  }
+  /* Guiño eclipse: un pequeño círculo con sombra de luna en la esquina */
+  .este-mes::after {
+    content:'○';
+    position:absolute;bottom:16px;right:24px;
+    font-size:1.2rem;color:rgba(177,156,217,0.15);
+    font-family:'DM Mono',monospace;
+  }
+  .este-mes p { color:#c5bfd6;margin-bottom:16px; }
+  .este-mes p:last-child { margin-bottom:0; }
+  .este-mes .catalyzer {
+    font-style:italic;color:var(--text);font-size:1rem;line-height:1.8;
+    border-left:2px solid var(--accent2);padding-left:20px;margin:24px 0;
+  }
+  .ese-alguien {
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-size:1.15rem;
+    color:var(--accent1);
+    text-align:center;
+    margin-top:24px;
+    display:block;
+  }
+
+  /* TRAITS */
+  .traits-list { display:flex;flex-direction:column;gap:24px;margin-top:36px; }
+  .trait {
+    display:grid;grid-template-columns:120px 1fr;gap:24px;align-items:start;
+    padding:24px;background:var(--card);border:1px solid var(--border);border-radius:10px;
+    transition:border-color 0.3s,transform 0.3s;
+  }
+  .trait:hover { border-color:rgba(177,156,217,0.3);transform:translateX(4px); }
+  .trait-label { font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;color:var(--accent1);text-transform:uppercase;padding-top:3px; }
+  .trait-desc { font-size:0.97rem;color:#c5bfd6;line-height:1.7;margin:0; }
+
+  /* DREAMS */
+  .dreams-cards { display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:36px; }
+  .dream-card {
+    padding:28px;border:1px solid var(--border);border-radius:12px;background:var(--card);
+    position:relative;overflow:hidden;transition:transform 0.3s;
+  }
+  .dream-card:hover { transform:translateY(-4px); }
+  .dream-card::after {
+    content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,var(--accent1),var(--accent2));
+    transform:scaleX(0);transform-origin:left;transition:transform 0.4s;
+  }
+  .dream-card:hover::after { transform:scaleX(1); }
+  .dream-num { font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:var(--border);line-height:1;margin-bottom:12px; }
+  .dream-title { font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text);margin-bottom:10px; }
+  .dream-desc { font-size:0.9rem;color:var(--muted);line-height:1.65;margin:0; }
+
+  .divider { width:100%;height:1px;background:var(--border);max-width:900px;margin:0 auto; }
+
+  /* ELI */
+  .eli-section { text-align:center;padding:80px 24px; }
+  .paw-emoji { font-size:3rem;display:block;margin-bottom:16px;animation:bounce 2s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+  /* LESSONS */
+  .lessons { display:flex;flex-direction:column;gap:20px;margin-top:36px;counter-reset:lesson; }
+  .lesson {
+    padding:24px 28px;background:var(--card);border-radius:10px;border:1px solid var(--border);
+    position:relative;padding-left:64px;
+  }
+  .lesson::before {
+    counter-increment:lesson;content:counter(lesson,decimal-leading-zero);
+    position:absolute;left:24px;top:24px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--accent1);letter-spacing:0.05em;
+  }
+  .lesson p { margin:0;font-size:0.97rem; }
+
+  /* FINAL QUOTE */
+  .final { text-align:center;padding:100px 24px 60px;position:relative;z-index:1; }
+  .final-quote {
+    font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(1.3rem,3vw,1.9rem);
+    line-height:1.6;max-width:680px;margin:0 auto 32px;color:var(--text);
+  }
+  .final-sig { font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.3em;color:var(--muted);text-transform:uppercase; }
+  .final-sig span { color:var(--accent1); }
+
+  /* SECRET PORTAL */
+  .portal-section {
+    position:relative;z-index:1;padding:60px 24px 100px;max-width:600px;margin:0 auto;text-align:center;
+  }
+  /* Guiño eclipse: texto decorativo tenue "e c l i p s e" vertical */
+  .portal-eclipse-hint {
+    font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.6em;
+    color:rgba(177,156,217,0.12);text-transform:uppercase;margin-bottom:32px;
+    writing-mode:horizontal-tb;
+  }
+  .portal-box {
+    background:var(--card);border:1px solid rgba(177,156,217,0.2);border-radius:16px;padding:40px 32px;
+    position:relative;overflow:hidden;
+  }
+  .portal-box::before {
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse at 50% 0%,rgba(177,156,217,0.07),transparent 70%);
+  }
+  /* Luna menguante sutil en el fondo — guiño visual */
+  .portal-box::after {
+    content:'';position:absolute;bottom:-20px;right:-20px;
+    width:80px;height:80px;border-radius:50%;
+    box-shadow:inset -20px 0 0 0 rgba(177,156,217,0.07);
+  }
+  .portal-icon {
+    font-size:2rem;margin-bottom:16px;display:block;
+    animation:moonPulse 4s infinite;
+  }
+  .portal-title {
+    font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--text);margin-bottom:8px;
+  }
+  .portal-hint-text {
+    font-family:'Lora',serif;font-style:italic;font-size:0.9rem;color:var(--muted);margin-bottom:28px;
+  }
+  .portal-input-wrap { position:relative;margin-bottom:16px; }
+  .portal-input {
+    width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;
+    padding:14px 48px 14px 20px;font-family:'DM Mono',monospace;font-size:0.9rem;letter-spacing:0.15em;
+    color:var(--text);outline:none;transition:border-color 0.3s;text-align:center;
+  }
+  .portal-input::placeholder { color:var(--muted);letter-spacing:0.1em; }
+  .portal-input:focus { border-color:rgba(177,156,217,0.5); }
+  .portal-btn {
+    width:100%;padding:14px;background:linear-gradient(135deg,rgba(177,156,217,0.2),rgba(126,200,200,0.1));
+    border:1px solid rgba(177,156,217,0.3);border-radius:8px;color:var(--text);
+    font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;
+    cursor:pointer;transition:all 0.3s;
+  }
+  .portal-btn:hover { background:linear-gradient(135deg,rgba(177,156,217,0.35),rgba(126,200,200,0.2));border-color:rgba(177,156,217,0.6); }
+  .portal-error {
+    font-family:'DM Mono',monospace;font-size:0.7rem;color:#c47;letter-spacing:0.1em;
+    margin-top:12px;display:none;
+  }
+  .portal-error.show { display:block; }
+
+  /* 4:04 SECTION */
+  .entrada-section {
+    position:relative;z-index:1;max-width:720px;margin:0 auto;padding:80px 32px;
+  }
+  .entrada-timestamp {
+    font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.25em;
+    color:var(--accent2);text-transform:uppercase;margin-bottom:32px;opacity:0.7;
+  }
+  .entrada-title {
+    font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.2rem);
+    font-weight:400;color:var(--text);margin-bottom:32px;line-height:1.3;
+  }
+  .entrada-title em { color:var(--accent1);font-style:italic; }
+  .entrada-body p {
+    font-family:'Lora',serif;font-size:1rem;line-height:1.95;color:#c5bfd6;
+    margin-bottom:20px;
+  }
+  .entrada-body strong { color:var(--accent3); }
+  .entrada-body em { color:var(--accent1);font-style:italic; }
+  .hidden-word .hw {
+    color:transparent;border-radius:3px;transition:all 0.4s;
+  }
+  .hunt-active .hidden-word .hw {
+    color:var(--accent1);background:rgba(177,156,217,0.12);
+    padding:0 3px;text-shadow:0 0 12px rgba(177,156,217,0.6);
+  }
+
+  /* WORD HUNT GAME */
+  .hunt-section {
+    position:relative;z-index:1;max-width:720px;margin:0 auto;padding:60px 32px;
+    text-align:center;
+  }
+  .hunt-intro {
+    font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.2em;
+    color:var(--muted);text-transform:uppercase;margin-bottom:16px;
+  }
+  .hunt-title {
+    font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,1.9rem);
+    color:var(--text);margin-bottom:20px;font-weight:400;
+  }
+  .hunt-desc {
+    font-family:'Lora',serif;font-style:italic;color:#9d98b5;font-size:0.95rem;
+    line-height:1.8;margin-bottom:36px;
+  }
+  .hunt-btn {
+    background:transparent;border:1px solid rgba(177,156,217,0.3);border-radius:8px;
+    color:var(--accent1);font-family:'DM Mono',monospace;font-size:0.72rem;
+    letter-spacing:0.2em;text-transform:uppercase;padding:14px 32px;cursor:pointer;
+    transition:all 0.3s;
+  }
+  .hunt-btn:hover { background:rgba(177,156,217,0.1);border-color:rgba(177,156,217,0.6); }
+  .hunt-progress { display:none;margin-top:32px; }
+  .hunt-progress.show { display:block; }
+  .hunt-words-found {
+    font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;
+    color:var(--muted);margin-bottom:16px;text-transform:uppercase;
+  }
+  .hunt-slots {
+    display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:24px;
+  }
+  .hunt-slot {
+    width:36px;height:44px;border:1px solid rgba(177,156,217,0.2);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--accent1);
+    background:rgba(177,156,217,0.05);transition:all 0.4s;
+  }
+  .hunt-slot.filled {
+    border-color:rgba(177,156,217,0.5);background:rgba(177,156,217,0.12);
+    box-shadow:0 0 14px rgba(177,156,217,0.2);
+  }
+  .hunt-reward { display:none;margin-top:32px;padding:32px;
+    border:1px solid rgba(126,200,200,0.25);border-radius:16px;
+    background:rgba(126,200,200,0.04); }
+  .hunt-reward.show { display:block;animation:fadeUp 0.6s ease; }
+  .hunt-reward p {
+    font-family:'Lora',serif;font-style:italic;font-size:1rem;line-height:1.9;color:#c5bfd6;
+  }
+  .hunt-reward .reward-title {
+    font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.3em;
+    color:var(--accent2);text-transform:uppercase;margin-bottom:20px;font-style:normal;
+  }
+
+  /* PC BANNER */
+  footer { position:relative;z-index:1;text-align:center;padding:32px 24px;border-top:1px solid var(--border); }
+  footer p { font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;color:var(--muted);margin:0;text-transform:uppercase; }
+
+  /* PC BANNER */
+  .pc-banner {
+    position:fixed;bottom:0;left:0;right:0;z-index:10000;
+    background:rgba(21,21,30,0.96);backdrop-filter:blur(12px);
+    border-top:1px solid rgba(177,156,217,0.2);
+    padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .pc-banner-text {
+    font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;color:#c5bfd6;
+  }
+  .pc-banner-text span { color:var(--accent1); }
+  .pc-banner-close {
+    background:none;border:1px solid rgba(177,156,217,0.25);border-radius:6px;
+    color:var(--muted);font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;
+    padding:6px 14px;cursor:pointer;transition:all 0.3s;white-space:nowrap;
+  }
+  .pc-banner-close:hover { border-color:rgba(177,156,217,0.6);color:var(--text); }
+  @media(min-width:900px){ .pc-banner{ display:none; } }
+
+  /* Guiño en footer — fase lunar */
+  .footer-moon { color:rgba(177,156,217,0.4);margin:0 6px; }
+
+  /* Reveal */
+  .reveal { opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1;transform:translateY(0); }
+
+  @media(max-width:600px) {
+    .trait { grid-template-columns:1fr; }
+  }
+
+  /* ===== HEARTBEAT SECTION ===== */
+  .heartbeat-section {
+    position:relative;z-index:1;max-width:720px;margin:0 auto;
+    padding:80px 32px;text-align:center;
+  }
+  .heartbeat-canvas-wrap {
+    position:relative;width:300px;height:300px;margin:0 auto 16px;
+  }
+  .heart-path {
+    fill:#e03050;
+    filter:drop-shadow(0 0 22px rgba(220,40,70,0.6));
+    animation:heartPulse 1.4s ease-in-out infinite;
+    transform-origin:160px 145px;
+  }
+  @keyframes heartPulse {
+    0%,100%{transform:scale(1);}
+    14%{transform:scale(1.13);}
+    28%{transform:scale(1);}
+    42%{transform:scale(1.08);}
+    70%{transform:scale(1);}
+  }
+  .heart-word {
+    position:absolute;font-family:'DM Mono',monospace;font-size:0.68rem;
+    letter-spacing:0.12em;opacity:0;
+    pointer-events:none;white-space:nowrap;
+    text-shadow:0 0 12px currentColor;
+  }
+  @keyframes heartWordFloat {
+    0%   { opacity:0; transform:translate(-50%,-50%) translateY(0px) scale(0.8); }
+    15%  { opacity:1; transform:translate(-50%,-50%) translateY(-6px) scale(1); }
+    70%  { opacity:0.85; transform:translate(-50%,-50%) translateY(-18px) scale(1); }
+    100% { opacity:0; transform:translate(-50%,-50%) translateY(-32px) scale(0.9); }
+  }
+  .heart-drop {
+    position:absolute;font-size:1rem;left:50%;transform:translateX(-50%);
+    bottom:-20px;pointer-events:none;animation:dropPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes dropPulse{0%,100%{transform:translateX(-50%) scale(1);}14%{transform:translateX(-50%) scale(1.3);}28%{transform:translateX(-50%) scale(1);}}
+  .heart-stay-label {
+    font-family:'Playfair Display',serif;font-style:italic;font-size:0.9rem;
+    color:var(--accent3);opacity:0.75;margin-top:8px;letter-spacing:0.06em;
+  }
+
+  /* ===== INSOMNIA MODE ===== */
+  .insomnia-toggle {
+    position:fixed;top:20px;right:20px;z-index:9998;
+    background:rgba(10,10,20,0.7);backdrop-filter:blur(8px);
+    border:1px solid rgba(177,156,217,0.2);border-radius:50px;
+    padding:8px 16px;font-family:'DM Mono',monospace;font-size:0.6rem;
+    letter-spacing:0.15em;color:var(--muted);cursor:pointer;transition:all 0.6s;
+  }
+  .insomnia-toggle:hover{border-color:rgba(177,156,217,0.5);color:var(--accent1);}
+  body.insomnia { --bg:#03050f;--surface:#060812;--card:#080b18;--accent1:#6ea8d6;--accent2:#4a7a9b;--glow:rgba(110,168,214,0.1); }
+  body.insomnia .insomnia-toggle{color:#6ea8d6;border-color:rgba(110,168,214,0.35);}
+  body.insomnia .orb1{background:radial-gradient(circle,rgba(20,50,110,0.2),transparent 70%)!important;}
+  body.insomnia .orb2{background:radial-gradient(circle,rgba(10,30,80,0.14),transparent 70%)!important;}
+  .insomnia-card {
+    display:none;position:fixed;top:56px;right:20px;z-index:9997;
+    background:rgba(4,6,16,0.97);border:1px solid rgba(110,168,214,0.18);
+    border-radius:14px;padding:20px 22px;width:220px;
+    font-family:'Lora',serif;font-style:italic;font-size:0.8rem;
+    color:#5a8ab0;line-height:1.75;
+  }
+  body.insomnia .insomnia-card{display:block;animation:fadeUp 0.6s ease;}
+
+  /* ===== STATIC GLITCH ===== */
+  .static-overlay {
+    display:none;position:fixed;inset:0;z-index:99999;
+    background:#000;align-items:center;justify-content:center;flex-direction:column;
+  }
+  .static-overlay.show{display:flex;}
+  .static-noise {
+    position:absolute;inset:0;opacity:0.5;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.2'/%3E%3C/svg%3E");
+    animation:staticFlicker 0.07s steps(1) infinite;
+  }
+  @keyframes staticFlicker{0%{opacity:0.4;}50%{opacity:0.65;}100%{opacity:0.35;}}
+  .static-scanlines {
+    position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.35) 2px,rgba(0,0,0,0.35) 4px);
+  }
+  .static-msg {
+    position:relative;z-index:2;font-family:'DM Mono',monospace;
+    font-size:clamp(0.85rem,2.5vw,1.2rem);letter-spacing:0.12em;
+    color:#e8e4f0;text-align:center;line-height:1.9;padding:0 40px;
+    animation:glitchText 0.12s steps(1) infinite;
+    text-shadow:2px 0 0 rgba(255,0,80,0.4),-2px 0 0 rgba(0,200,255,0.4),0 0 20px rgba(177,156,217,0.6);
+  }
+  @keyframes glitchText{
+    0%{text-shadow:2px 0 0 rgba(255,0,80,0.4),-2px 0 0 rgba(0,200,255,0.4),0 0 20px rgba(177,156,217,0.6);}
+    33%{text-shadow:-2px 0 0 rgba(255,0,80,0.4),2px 0 0 rgba(0,200,255,0.4),0 0 20px rgba(177,156,217,0.6);}
+    66%{text-shadow:1px 0 0 rgba(255,0,80,0.5),-1px 0 0 rgba(0,200,255,0.5),0 0 14px rgba(177,156,217,0.4);}
+  }
+  .static-sublabel {
+    position:relative;z-index:2;margin-top:18px;
+    font-family:'DM Mono',monospace;font-size:0.5rem;
+    letter-spacing:0.35em;color:rgba(255,255,255,0.18);text-transform:uppercase;
+  }
+
+  /* ===== QUIZ ===== */
+  .quiz-section {
+    position:relative;z-index:1;max-width:720px;margin:0 auto;padding:80px 32px;
+  }
+  .quiz-q-num {
+    font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.25em;
+    color:var(--muted);text-transform:uppercase;margin-bottom:10px;
+  }
+  .quiz-question {
+    margin-bottom:24px;padding:26px;border:1px solid var(--border);
+    border-radius:14px;background:var(--card);transition:border-color 0.3s;
+  }
+  .quiz-question.answered{border-color:rgba(177,156,217,0.25);}
+  .quiz-q-text {
+    font-family:'Lora',serif;font-size:0.97rem;color:var(--text);
+    margin-bottom:16px;line-height:1.6;
+  }
+  .quiz-options{display:flex;flex-direction:column;gap:9px;}
+  .quiz-opt {
+    background:rgba(255,255,255,0.02);border:1px solid var(--border);
+    border-radius:8px;padding:11px 15px;font-family:'DM Mono',monospace;
+    font-size:0.72rem;letter-spacing:0.07em;color:var(--muted);
+    cursor:pointer;transition:all 0.22s;text-align:left;
+  }
+  .quiz-opt:hover:not(:disabled){background:rgba(177,156,217,0.07);border-color:rgba(177,156,217,0.3);color:var(--text);}
+  .quiz-opt.correct{background:rgba(126,200,200,0.1);border-color:rgba(126,200,200,0.45);color:#7ec8c8 !important;}
+  .quiz-opt.wrong{background:rgba(200,68,100,0.07);border-color:rgba(200,68,100,0.3);color:#c47 !important;}
+  .quiz-opt:disabled{cursor:default;}
+  .quiz-result {
+    display:none;text-align:center;padding:44px 28px;
+    border:1px solid rgba(177,156,217,0.2);border-radius:16px;
+    background:rgba(177,156,217,0.03);margin-top:36px;
+  }
+  .quiz-result.show{display:block;animation:fadeUp 0.7s ease;}
+  .quiz-score-num {
+    font-family:'Playfair Display',serif;font-size:3.5rem;
+    color:var(--accent1);line-height:1;margin-bottom:8px;
+  }
+  .quiz-score-label {
+    font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.3em;
+    color:var(--muted);text-transform:uppercase;margin-bottom:24px;
+  }
+  .quiz-result-text {
+    font-family:'Lora',serif;font-style:italic;font-size:1rem;
+    color:#c5bfd6;line-height:1.85;
+  }
+  .quiz-restart {
+    margin-top:28px;background:transparent;border:1px solid rgba(177,156,217,0.25);
+    border-radius:8px;color:var(--accent1);font-family:'DM Mono',monospace;
+    font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;
+    padding:12px 28px;cursor:pointer;transition:all 0.3s;
+  }
+  .quiz-restart:hover{background:rgba(177,156,217,0.08);border-color:rgba(177,156,217,0.5);}
+</style>
+</head>
+<body>
+
+<!-- BANNER MÓVIL -->
+<div class="pc-banner" id="pcBanner">
+  <p class="pc-banner-text">💻 <span>Mejor experiencia desde PC</span> — esta página fue diseñada para verse en computador.</p>
+  <button class="pc-banner-close" onclick="document.getElementById('pcBanner').style.display='none'">Entendido</button>
+</div>
+
+<!-- INSOMNIA TOGGLE -->
+<button class="insomnia-toggle" onclick="toggleInsomnia()" id="insomniaBtn">🌙 3am</button>
+<div class="insomnia-card" id="insomniaCard">
+  Son las 3am y no puedo dormir.<br>La música suena bajito.<br>Y yo sigo aquí, pensando en todo.
+</div>
+
+<!-- STATIC GLITCH OVERLAY -->
+<div class="static-overlay" id="staticOverlay">
+  <div class="static-noise"></div>
+  <div class="static-scanlines"></div>
+  <p class="static-msg">"Todavía creo en los finales<br>que valen la pena."</p>
+  <p class="static-sublabel">— señal interrumpida —</p>
+</div>
+
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-moon"></div>
+  <div class="hero-eyebrow">Hola, soy</div>
+  <h1 class="hero-name">Santiago</h1>
+  <div class="hero-age">18 años · Ingeniería de Sistemas · Cundinamarca</div>
+  <p class="hero-tagline">
+    No quiero ser recordado por ser perfecto —<br>
+    quiero ser recordado por haber <span class="hidden-word" data-letter="A" onclick="huntClick(this)"><span class="hw">amado</span></span>, aprendido<br>
+    y haber dado lo mejor de mí.
+  </p>
+  <!-- Guiño eclipse: coordenadas falsas que en realidad forman "eclipse" en código -->
+  <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;color:rgba(177,156,217,0.1);margin-top:32px;opacity:0;animation:fadeUp 1s 2s forwards;">
+    34.0°N · 74.3°W · 🌑 · fase: nueva
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- VIDEO -->
+<div class="divider"></div>
+<section class="reveal">
+  <div class="section-label">Mi canción</div>
+  <h2 class="section-title">Lo que suena<br><em>cuando siento</em></h2>
+  <div class="video-wrapper">
+    <iframe src="https://www.youtube.com/embed/zufnAPo1fkc" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+
+  <!-- ESTE MES DE JUNIO -->
+  <div class="este-mes" style="margin-top:48px;">
+    <p>Estoy en un momento de mi vida en que me está doliendo mucho. Este mes de junio ha sido difícil — todos los junios han sido malos. Soy llorón, y soy algo diferente, para bien o para mal. Siempre en mi vida se me recordará por mi nobleza y mis ganas de salir adelante.</p>
+
+    <p>Quiero a muchas personas, pero hay <strong style="color:var(--accent3)">dos en específico</strong> que quiero mucho y he querido. Siento un gran vacío al pensar que se irán de mi vida algún día. No acepto eso. Prefiero dormir o mantener mi mente ocupada — ya sea caminando solo por la calle o simplemente cerrando los ojos.</p>
+
+    <p>A veces soy malo conmigo mismo. En verdad han habido dos veces que la vida me ha golpeado fuerte. Una de esas experiencias fue con mi perrito <strong style="color:var(--accent3)">Blue</strong> — el día que se fue, dejé de ser yo.</p>
+
+    <div class="catalyzer">
+      Pero llegó una persona algún día que me hizo volver a mí. Gracias a su llegada entendí algo: hay personas que actúan como catalizadores. Encienden tus emociones, te ayudan a salir de la rutina, la apatía, el aislamiento — para conectar de nuevo con la ilusión y el presente. Es experimentar una dosis intensa de motivación, alegría y complicidad que te hace percibir el mundo con más brillo, recordándote tu capacidad de disfrutar, compartir y sentir profundamente.
+    </div>
+
+    <span class="ese-alguien">Esa persona sabe quién es...</span>
+
+    <p style="margin-top:24px;">A veces soy malo manejando mi mente y pienso en los peores escenarios posibles. Siento que el mundo ya está muy corrompido y que debería reiniciarse.</p>
+  </div>
+</section>
+
+<!-- SOBRE MÍ -->
+<div class="divider"></div>
+<section class="reveal">
+  <div class="section-label">Sobre mí</div>
+  <h2 class="section-title">Alguien que siente<br><em>profundamente</em></h2>
+  <p>Soy una persona emocionalmente sensible. Las palabras, los recuerdos y las personas importantes tienen un impacto profundo en mí. Mientras algunas personas olvidan rápidamente, yo suelo guardar esas experiencias durante mucho <span class="hidden-word" data-letter="P" onclick="huntClick(this)"><span class="hw">tiempo</span></span> porque les doy un significado especial.</p>
+  <p>Mi sensibilidad no es debilidad. Me permite empatizar, comprender a los demás y encontrar belleza en pequeños detalles que muchas personas pasan por alto.</p>
+  <p>Soy sentimental. Guardo cartas, conversaciones, fotografías, canciones y recuerdos porque representan momentos que marcaron mi vida. Creo que cada persona que llega a nuestro camino deja algo de sí misma en nosotros.</p>
+
+  <div class="quote-block">
+    <blockquote>"Cuando quiero a alguien, lo hago de verdad. Para mí, las personas importantes se convierten en parte de mi historia."</blockquote>
+    <cite>— Santiago</cite>
+    <!-- Guiño eclipse: fase lunar discreta al lado de la firma -->
+    <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(177,156,217,0.2);float:right;margin-top:-18px;letter-spacing:0.15em;">🌑 new moon</span>
+  </div>
+</section>
+
+<!-- PERSONALIDAD -->
+<div class="divider"></div>
+<section class="reveal">
+  <div class="section-label">Personalidad</div>
+  <h2 class="section-title">Quién soy<br><em>por dentro</em></h2>
+  <div class="traits-list">
+    <div class="trait">
+      <span class="trait-label">Sensible</span>
+      <p class="trait-desc">Siento las emociones con intensidad. La felicidad, la nostalgia, la esperanza y la tristeza tienen un gran impacto en mí porque vivo las cosas de manera profunda.</p>
+    </div>
+    <div class="trait">
+      <span class="trait-label">Reflexivo</span>
+      <p class="trait-desc">Me gusta analizar las situaciones y encontrar significado en las experiencias que vivo. <span class="hidden-word" data-letter="R" onclick="huntClick(this)"><span class="hw">Pienso</span></span> mucho en el futuro y en las personas que quiero.</p>
+    </div>
+    <div class="trait">
+      <span class="trait-label">Perseverante</span>
+      <p class="trait-desc">Cuando algo me importa, no me rindo fácilmente. Intento dar lo mejor de mí incluso cuando las cosas se ponen difíciles.</p>
+    </div>
+    <div class="trait">
+      <span class="trait-label">Soñador</span>
+      <p class="trait-desc">Siempre estoy pensando en lo que puede llegar a ser. Creo en la capacidad de las personas para crecer y en las segundas oportunidades.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VALORES -->
+<div class="divider"></div>
+<section class="reveal">
+  <div class="section-label">Lo que más valoro</div>
+  <h2 class="section-title">Mi <em>brújula</em></h2>
+  <p>Creo que las relaciones más importantes son aquellas donde ambas <span class="hidden-word" data-letter="O" onclick="huntClick(this)"><span class="hw">personas</span></span> pueden ser ellas mismas sin miedo.</p>
+  <div class="values-grid">
+    <div class="value-item"><span class="value-icon">🤝</span><span class="value-name">Honestidad</span></div>
+    <div class="value-item"><span class="value-icon">🛡️</span><span class="value-name">Lealtad</span></div>
+    <div class="value-item"><span class="value-icon">🌿</span><span class="value-name">Respeto</span></div>
+    <!-- Guiño eclipse: la llave como símbolo de descifrar algo -->
+    <div class="value-item"><span class="value-icon">🔑</span><span class="value-name">Confianza</span></div>
+    <div class="value-item"><span class="value-icon">💛</span><span class="value-name">Amor sincero</span></div>
+    <div class="value-item"><span class="value-icon">🌱</span><span class="value-name">Crecimiento</span></div>
+    <div class="value-item"><span class="value-icon">🏠</span><span class="value-name">Familia</span></div>
+    <div class="value-item"><span class="value-icon">✨</span><span class="value-name">Amistad real</span></div>
+  </div>
+</section>
+
+<!-- SUEÑOS -->
+<div class="divider"></div>
+<section class="reveal">
+  <div class="section-label">Mis sueños</div>
+  <h2 class="section-title">Lo que<br><em>construyo</em></h2>
+  <div class="dreams-cards">
+    <div class="dream-card">
+      <div class="dream-num">01</div>
+      <div class="dream-title">Gran profesional</div>
+      <p class="dream-desc">Convertirme en un referente en sistemas y tecnología. Construir proyectos que ayuden a las personas y dejar una huella positiva en el mundo.</p>
+    </div>
+    <div class="dream-card">
+      <div class="dream-num">02</div>
+      <div class="dream-title">Vida estable</div>
+      <p class="dream-desc">Construir una vida tranquila y significativa. <span class="hidden-word" data-letter="N" onclick="huntClick(this)"><span class="hw">Formar</span></span> una familia algún día y compartir mi vida con alguien que me ame de manera genuina.</p>
+    </div>
+    <div class="dream-card">
+      <div class="dream-num">03</div>
+      <div class="dream-title">Seguir creciendo</div>
+      <p class="dream-desc">Convertirme en la mejor versión de mí mismo, un día a la vez, a través de pequeños pasos constantes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ELI -->
+<div class="divider"></div>
+<section class="eli-section reveal">
+  <div class="section-label" style="justify-content:center;">Mis animales favoritos</div>
+  <span class="paw-emoji">🐾</span>
+  <h2 class="section-title" style="text-align:center;">Eli, Blue y los <em>mapaches</em></h2>
+  <p style="text-align:center;max-width:560px;margin:0 auto;">Los perros ocupan un lugar enorme en mi corazón. <strong style="color:var(--accent3)">Eli</strong> está conmigo hoy, y <strong style="color:var(--accent3)">Blue</strong> siempre estará en mi memoria. Los animales tienen una forma única de llegar al alma que ninguna otra cosa reemplaza.</p>
+</section>
+
+<!-- MÚSICA -->
+<div class="divider"></div>
+<section class="reveal">
+  <div class="section-label">Billie Eilish</div>
+  <h2 class="section-title">Refugios<br><em>sonoros</em></h2>
+  <div class="music-card">
+    <div class="music-card-header">
+      <div class="vinyl"></div>
+      <div class="music-info">
+        <h3>everything i wanted</h3>
+        <span>Billie Eilish · TV</span>
+      </div>
+    </div>
+    <p class="music-desc">Cuando la tristeza llega, estas canciones son las que me acompañan. Billie Eilish tiene una forma de poner en <span class="hidden-word" data-letter="D" onclick="huntClick(this)"><span class="hw">palabras</span></span> todo lo que es difícil de decir. <em style="color:var(--accent2)">everything i wanted</em> y <em style="color:var(--accent2)">TV</em> son mis refugios cuando el mundo se siente demasiado.</p>
+  </div>
+
+  <!-- Guiño eclipse: la playlist es la que suena "en la oscuridad, cuando todo se apaga" -->
+  <div class="section-label" style="margin-top:48px;">Mi playlist secreta <span class="eclipse-star">✦</span></div>
+  <p class="spotify-caption">
+    Esta es mi playlist de Spotify que no me deja dormir — la que me relaja, me hace llorar y me hace sentirme <em style="color:var(--accent1)">vivo</em>. <span class="eclipse-star">✦</span>
+  </p>
+  <div class="spotify-card">
+    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/7JHqK8UQFPfiOgBdqe16tP?utm_source=generator&theme=0" width="100%" height="380" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
+</section>
+
+<!-- LO APRENDIDO -->
+<div class="divider"></div>
+<section class="reveal">
+  <div class="section-label">Lo que he aprendido</div>
+  <h2 class="section-title">Lecciones de<br><em>vida real</em></h2>
+  <div class="lessons">
+    <div class="lesson">
+      <p>Amar a alguien también implica respetar sus decisiones, incluso cuando no son las que uno esperaba.</p>
+    </div>
+    <div class="lesson">
+      <p>El crecimiento personal no sucede de un día para otro, sino a través de pequeños pasos constantes.</p>
+    </div>
+    <div class="lesson">
+      <p>Algunas personas dejan huellas tan profundas que ayudan a moldear quién eres, independientemente de si permanecen o no en tu vida.</p>
+    </div>
+    <div class="lesson">
+      <p>La sensibilidad no es fragilidad. Es una fortaleza que permite empatizar y encontrar belleza en lo que otros pasan por alto.</p>
+    </div>
+    <!-- Guiño eclipse: una lección "oculta" con luna -->
+    <div class="lesson" style="border-color:rgba(177,156,217,0.12);opacity:0.45;">
+      <p style="font-style:italic;color:var(--muted);">Hay momentos en que la oscuridad cubre todo — como un eclipse. Pero siempre, siempre, vuelve la luz.</p>
+    </div>
+  </div>
+</section>
+
+<!-- APEGO Y CARIÑO -->
+<div class="divider"></div>
+<section class="reveal">
+  <div class="section-label">Lo que siento</div>
+  <h2 class="section-title">No es apego —<br><em>es que quiero de verdad</em></h2>
+
+  <p>Una vez me dijeron que debía soltar porque tenía apego. Y quizás tengan razón en parte.</p>
+  <p>Pero yo no creo que las personas sean objetos que simplemente se dejan caer cuando las cosas se complican. Cuando has estado para alguien, cuando la has apoyado, escuchado, acompañado y querido de verdad.</p>
+
+  <div class="quote-block">
+    <blockquote>"También sé que he cometido errores. No soy perfecto. Me he equivocado, he tenido inseguridades y he hecho cosas que hoy intento mejorar. Pero tampoco me gusta la idea de que una persona tenga que ser definida únicamente por sus errores."</blockquote>
+    <cite>— Santiago</cite>
+  </div>
+
+  <p>Estoy aprendiendo. Aprendiendo a querer, a confiar, a comunicarme mejor y a conocer a las personas. Y aprender significa equivocarse algunas veces.</p>
+  <p>Hay cosas que sí son mi responsabilidad, y las acepto. Pero también hay cosas que forman parte del proceso de crecer. No quiero perder a las personas importantes de mi vida solo por estar aprendiendo a vivir una vida que nadie me enseñó a vivir.</p>
+  <p>Por eso no puedo simplemente soltar — fácil ni difícil — a personas que quiero y son importantes para mí y mi vida. Son contadas.</p>
+
+  <div class="este-mes" style="margin-top:40px;">
+    <p>No porque crea que todo estuvo bien.<br>No porque crea que no cometí errores.</p>
+    <div class="catalyzer">
+      Sino porque cuando quiero a alguien, ese cariño no desaparece de un día para otro, ni en meses, ni en años — o quizás nunca, por decisión propia y sentimental.
+    </div>
+    <p>Cuando abro mi corazón de verdad, lo hago por completo. No me pasa con muchas personas. Son muy pocas las que llegan a conocer quién soy detrás de todo lo que muestro.</p>
+    <p>Y quizás por eso valoro tanto a quienes deciden quedarse. Porque todos cometemos errores. Todos estamos aprendiendo. Y a veces me pregunto si las personas no merecen un poco de paciencia mientras intentan convertirse en una mejor versión de sí mismas.</p>
+    <p>No espero perfección de nadie. Solo espero que, cuando alguien vea mis errores, también sea capaz de ver todo el esfuerzo que hago para mejorar — o me ayude a formarme y construirme como mejor persona.</p>
+    <span class="ese-alguien">Muchas personas me han ayudado y las quiero mucho — ell@s saben quiénes son.</span>
+    <p style="margin-top:24px;">Para mí ya no son solo personas conocidas. Son algo más, como una familia. He tenido también problemas con ell@s... pero ¿qué familia no tiene problemas?</p>
+  </div>
+</section>
+
+<!-- LATIDO -->
+<div class="divider"></div>
+<section class="heartbeat-section reveal">
+  <div class="section-label">Lo que late</div>
+  <h2 class="section-title">Dentro de<br><em>mi pecho</em></h2>
+  <div class="heartbeat-canvas-wrap" id="heartWrap">
+    <svg viewBox="0 0 320 300" class="heartbeat-svg" id="heartSvg">
+      <path class="heart-path" d="M160 245 C60 175 20 120 20 80 C20 45 50 20 90 20 C115 20 140 35 160 55 C180 35 205 20 230 20 C270 20 300 45 300 80 C300 120 260 175 160 245 Z"/>
+    </svg>
+    <div class="heart-drop" id="heartDrop">💧</div>
+  </div>
+  <p class="heart-stay-label" id="heartStayLabel"></p>
+</section>
+
+<!-- QUIZ -->
+<div class="divider"></div>
+<section class="quiz-section reveal">
+  <div class="section-label">Conóceme de verdad</div>
+  <h2 class="section-title">¿Qué tan bien<br><em>me conoces?</em></h2>
+  <div id="quizContainer"></div>
+  <div class="quiz-result" id="quizResult">
+    <div class="quiz-score-num" id="quizScoreNum">0%</div>
+    <div class="quiz-score-label">de compatibilidad</div>
+    <p class="quiz-result-text" id="quizResultText"></p>
+    <button class="quiz-restart" onclick="restartQuiz()">↺ Volver a intentar</button>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<div class="divider"></div>
+<section class="reveal">
+  <div class="section-label">Lo que me mueve</div>
+  <h2 class="section-title">Videos que<br><em>me dicen algo</em></h2>
+  <div class="video-wrapper">
+    <iframe src="https://www.youtube.com/embed/w595wLc7IVI" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+  <div class="video-wrapper" style="margin-top:24px;">
+    <iframe src="https://www.youtube.com/embed/vyPS4noQkLk" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+</section>
+
+<!-- 4:04 DE LA TARDE -->
+<div class="divider"></div>
+<section class="entrada-section reveal" id="entrada-404">
+  <div class="entrada-timestamp">4:04 de la tarde &nbsp;·&nbsp; 08/06/2026</div>
+  <h2 class="entrada-title">Hola, ¿cómo están?<br><em>Hoy les vengo a resumir un poco de todo esto.</em></h2>
+  <div class="entrada-body">
+    <p>Mi nombre es Santiago, pero mucha gente me dice <strong>Santi</strong>... y ya, esos son los apodos. Una persona me llama <strong>"Dav"</strong>, pero es secreto. A veces me llamo <em>"Nova"</em> — no sé, siempre me he asociado mucho con el cielo, constelaciones y demás. <em>Eclipse. Nova. Orión.</em> Me gusta.</p>
+    <p>Mi sueño es algún día volver a encontrar la felicidad — y la felicidad yo la veo representada en tener un <strong>hogar</strong>. Muy pocas personas lo saben: mi mayor sueño quizás es ese. Tener mascotas y personas que sean la puerta de mi felicidad.</p>
+    <p>Ahora vivo con mi familia — mamá, hermana, padrastro — sin olvidar mi amor <strong>Eli</strong>. Es mi mascota, y nadie sabe cuánto deseo verla en versión humana... Jaja, suena muy no sé, turbio, pero la quiero mucho. Ella me ha visto llorar, me ha visto feliz, y siempre ha estado conmigo. Ella sabe lo que soy. Quisiera que fuera humana para escuchar y verla — ¿qué me diría? ¿Cómo me trataría?... En fin.</p>
+    <p>Eso es un poquito de mi vida. <span class="hidden-word" data-letter="E" onclick="huntClick(this)"><span class="hw">Espero</span></span> seguir construyéndola con calma, <span class="hidden-word" data-letter="S" onclick="huntClick(this)"><span class="hw">siendo</span></span> honesto conmigo mismo.</p>
+  </div>
+</section>
+
+<!-- WORD HUNT GAME -->
+<div class="divider"></div>
+<section class="hunt-section reveal" id="huntSection">
+  <div class="hunt-intro">Mensaje oculto</div>
+  <h2 class="hunt-title">Hay una frase escondida<br>en esta página</h2>
+  <p class="hunt-desc">
+    Está dividida en varias partes. Solo quien lea todo con atención podrá encontrarla.<br>
+    Activa el modo búsqueda y haz clic en las palabras que brillen.
+  </p>
+  <button class="hunt-btn" id="huntStartBtn" onclick="startHunt()">✦ Activar búsqueda</button>
+
+  <div class="hunt-progress" id="huntProgress">
+    <p class="hunt-words-found" id="huntCounter">0 / 7 fragmentos encontrados</p>
+    <div class="hunt-slots" id="huntSlots">
+      <div class="hunt-slot" id="slot0">_</div>
+      <div class="hunt-slot" id="slot1">_</div>
+      <div class="hunt-slot" id="slot2">_</div>
+      <div class="hunt-slot" id="slot3">_</div>
+      <div class="hunt-slot" id="slot4">_</div>
+      <div class="hunt-slot" id="slot5">_</div>
+      <div class="hunt-slot" id="slot6">_</div>
+    </div>
+    <div class="hunt-reward" id="huntReward">
+      <p class="reward-title">— Mensaje desbloqueado —</p>
+      <p>Espero aprender a valorar más a las personas. A veces siento que son para siempre y que puedo darles menos... pero soy solo un tonto por haber tenido ese pensamiento. Si me ves muchas veces callado, solo viendo mi teléfono, estarás viendo tal vez a alguien interesante. Y bueno, la realidad es que soy muy solitario — y a lo largo de la vida lo he sido. A veces eso es bueno, pero muchas otras veces quisiera cambiar eso.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FRASE FINAL -->
+<div class="divider"></div>
+<div class="final reveal">
+  <p class="final-quote">
+    "No quiero ser recordado por ser perfecto; quiero ser recordado por haber amado, aprendido y haber dado lo mejor de mí incluso cuando las cosas fueron difíciles."
+  </p>
+  <div class="final-sig">— <span>Santiago</span> · 18 años · Soñador en construcción &nbsp;<span style="color:rgba(177,156,217,0.3);font-size:0.9em;">🌑</span></div>
+</div>
+
+<!-- PORTAL SECRETO -->
+<div class="divider" style="margin-top:40px;"></div>
+<div class="portal-section reveal">
+  <!-- Guiño: algo de lo que hablamos mucho, casi imperceptible -->
+  <div class="portal-eclipse-hint" style="font-size:0.45rem;opacity:0.07;letter-spacing:0.8em;">algo de lo que hablamos mucho</div>
+
+  <div class="portal-box">
+    <span class="portal-icon">🌑</span>
+    <h3 class="portal-title">Algo para alguien especial</h3>
+    <p class="portal-hint-text">Lo descifrarás si eres la persona que fue mi inspiración.</p>
+
+    <div class="portal-input-wrap">
+      <input class="portal-input" type="password" id="portalInput" placeholder="· · · · · · ·" maxlength="20" autocomplete="off" spellcheck="false"/>
+    </div>
+    <button class="portal-btn" onclick="checkPortal()">Entrar</button>
+    <p class="portal-error" id="portalError">Esa no es la clave... pero si eres quien creo, ya la sabes.</p>
+  </div>
+</div>
+
+<footer>
+  <p>Hecho con 🤍<span class="footer-moon">🌙</span>Santiago · Ingeniería de Sistemas · Universidad de Cundinamarca</p>
+</footer>
+
+<script>
+  // ── Reveal on scroll ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Word Hunt Game ──
+  const huntFound = new Set();
+  function startHunt() {
+    document.body.classList.add('hunt-active');
+    document.getElementById('huntStartBtn').style.display = 'none';
+    document.getElementById('huntProgress').classList.add('show');
+  }
+  function huntClick(el) {
+    if (!document.body.classList.contains('hunt-active')) return;
+    if (el.classList.contains('found')) return;
+    const letter = el.dataset.letter;
+    el.classList.add('found');
+    el.style.cursor = 'default';
+    el.querySelector('.hw').style.color = 'var(--accent2)';
+    el.querySelector('.hw').style.textShadow = '0 0 16px rgba(126,200,200,0.8)';
+    huntFound.add(letter);
+    updateHuntSlots();
+  }
+  function updateHuntSlots() {
+    const order = ['A','P','R','O','N','D','E','S'];
+    let count = 0;
+    order.forEach((l, i) => {
+      if (huntFound.has(l)) {
+        const slot = document.getElementById('slot' + i);
+        slot.textContent = l;
+        slot.classList.add('filled');
+        count++;
+      }
+    });
+    document.getElementById('huntCounter').textContent = count + ' / 7 fragmentos encontrados';
+    if (count >= 7) setTimeout(() => document.getElementById('huntReward').classList.add('show'), 600);
+  }
+
+  // ── Portal secreto ──
+  function checkPortal() {
+    const val = document.getElementById('portalInput').value.trim().toLowerCase();
+    const err = document.getElementById('portalError');
+    if (val === 'eclipse') {
+      window.location.href = 'https://ag24329209-star.github.io/ASHLEY-/';
+    } else {
+      err.classList.add('show');
+      document.getElementById('portalInput').style.borderColor = 'rgba(200,68,100,0.5)';
+      setTimeout(() => {
+        err.classList.remove('show');
+        document.getElementById('portalInput').style.borderColor = '';
+      }, 3000);
+    }
+  }
+  document.getElementById('portalInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') checkPortal();
+  });
+
+  // ── Heartbeat Words ──
+  const heartWords = [
+    {text:'Eli',color:'#b19cd9'},{text:'Nova',color:'#7ec8c8'},{text:'Eclipse',color:'#9d8bc4'},
+    {text:'Soledad',color:'#7a7490'},{text:'Hogar',color:'#f0c4a8'},{text:'Ash',color:'#d4a8c4'},
+    {text:'Mamá',color:'#f0c4a8'},{text:'Familia',color:'#b19cd9'},{text:'Adriana',color:'#7ec8c8'},
+    {text:'Reemplazo',color:'#6a6480'},{text:'Lineal',color:'#6a8a9d'},{text:'Blue',color:'#6ea8d6'},
+    {text:'Música',color:'#b19cd9'},{text:'Juegos',color:'#7ec8c8'}
+  ];
+  const wrap = document.getElementById('heartWrap');
+  const wrapSize = 300;
+  const cx = wrapSize / 2, cy = wrapSize / 2;
+
+  function spawnWord() {
+    const w = heartWords[Math.floor(Math.random() * heartWords.length)];
+    const el = document.createElement('span');
+    el.className = 'heart-word';
+    el.textContent = w.text;
+    el.style.color = w.color;
+    // Posición aleatoria en un anillo alrededor del corazón
+    const angle = Math.random() * 2 * Math.PI;
+    const r = 100 + Math.random() * 55;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    const dur = 2800 + Math.random() * 2000;
+    el.style.animation = `heartWordFloat ${dur}ms ease-out forwards`;
+    wrap.appendChild(el);
+    setTimeout(() => { if(el.parentNode) el.remove(); }, dur + 100);
+  }
+  setInterval(spawnWord, 550);
+
+  // Drop "quédate" label
+  let dropVisible = false;
+  setInterval(() => {
+    const lbl = document.getElementById('heartStayLabel');
+    const drop = document.getElementById('heartDrop');
+    dropVisible = !dropVisible;
+    lbl.textContent = dropVisible ? '— quédate —' : '';
+    lbl.style.opacity = dropVisible ? '1' : '0';
+    drop.style.opacity = dropVisible ? '1' : '0.4';
+  }, 3000);
+
+  // ── Sonido de latido suave (Web Audio API) ──
+  // Se inicia al hacer scroll hasta la sección del corazón
+  let heartAudioCtx = null;
+  let heartBeatInterval = null;
+
+  function playHeartbeat() {
+    try {
+      if (!heartAudioCtx) heartAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = heartAudioCtx;
+
+      function beat(time, gain) {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.connect(g); g.connect(ctx.destination);
+        osc.frequency.setValueAtTime(60, time);
+        osc.frequency.exponentialRampToValueAtTime(30, time + 0.12);
+        g.gain.setValueAtTime(0, time);
+        g.gain.linearRampToValueAtTime(gain, time + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.0001, time + 0.22);
+        osc.start(time); osc.stop(time + 0.25);
+      }
+
+      const now = ctx.currentTime;
+      beat(now, 0.13);         // lub
+      beat(now + 0.18, 0.08);  // dub
+    } catch(e) {}
+  }
+
+  // Observar la sección del corazón
+  const heartSection = document.querySelector('.heartbeat-section');
+  let heartBeating = false;
+  const heartObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !heartBeating) {
+        heartBeating = true;
+        playHeartbeat();
+        heartBeatInterval = setInterval(playHeartbeat, 1400);
+      } else if (!entry.isIntersecting && heartBeating) {
+        heartBeating = false;
+        clearInterval(heartBeatInterval);
+      }
+    });
+  }, { threshold: 0.4 });
+  if (heartSection) heartObserver.observe(heartSection);
+
+  // ── Insomnia Mode ──
+  let insomniaOn = false;
+  let insomniaAudio = null;
+  function toggleInsomnia() {
+    insomniaOn = !insomniaOn;
+    document.body.classList.toggle('insomnia', insomniaOn);
+    document.getElementById('insomniaBtn').textContent = insomniaOn ? '☀️ Volver' : '🌙 3am';
+    if (insomniaOn) {
+      // Create gentle rain-like ambient sound with Web Audio API
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const bufferSize = 4096;
+        const noise = ctx.createScriptProcessor(bufferSize, 1, 1);
+        noise.onaudioprocess = (e) => {
+          const out = e.outputBuffer.getChannelData(0);
+          for (let i = 0; i < bufferSize; i++) out[i] = (Math.random() * 2 - 1) * 0.015;
+        };
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.value = 800;
+        filter.Q.value = 0.3;
+        const gainNode = ctx.createGain();
+        gainNode.gain.value = 0.18;
+        noise.connect(filter);
+        filter.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        insomniaAudio = { ctx, noise, filter, gainNode };
+      } catch(e) {}
+    } else {
+      if (insomniaAudio) {
+        try { insomniaAudio.gainNode.disconnect(); } catch(e) {}
+        insomniaAudio = null;
+      }
+    }
+  }
+
+  // ── Static Glitch Signal ──
+  // Triggers once after 40 seconds of scrolling, then every ~3 min
+  function showStatic() {
+    const overlay = document.getElementById('staticOverlay');
+    overlay.classList.add('show');
+    setTimeout(() => overlay.classList.remove('show'), 3200);
+  }
+  let staticFired = false;
+  window.addEventListener('scroll', () => {
+    if (!staticFired && window.scrollY > 600) {
+      staticFired = true;
+      setTimeout(showStatic, 12000);
+      setInterval(showStatic, 190000);
+    }
+  });
+
+  // ── Quiz ──
+  const quizData = [
+    {
+      q: '¿Cuál es uno de mis animales favoritos?',
+      opts: ['🐱 Gato','🦝 Mapache','🦁 León'],
+      correct: 1
+    },
+    {
+      q: '¿Cómo se llama mi perro?',
+      opts: ['🐶 Max','🐶 Rocky','🐶 Eli'],
+      correct: 2
+    },
+    {
+      q: '¿Qué estudio?',
+      opts: ['📚 Derecho','📚 Ingeniería de Sistemas','📚 Medicina'],
+      correct: 1
+    },
+    {
+      q: '¿Qué valoro más en una persona?',
+      opts: ['💰 Dinero','🏆 Fama','❤️ Lealtad y sinceridad'],
+      correct: 2
+    },
+    {
+      q: '¿Qué me resulta más difícil?',
+      opts: ['😴 Dormir temprano','💔 Dejar ir a las personas que amo','🎮 Apagar el celular'],
+      correct: 1
+    },
+    {
+      q: '¿Qué prefiero?',
+      opts: ['🏖️ Una fiesta enorme','🏟️ Un estadio lleno','🌌 Una conversación profunda con alguien importante'],
+      correct: 2
+    },
+    {
+      q: '¿Qué me representa más?',
+      opts: ['🧊 Soy frío y distante','🎭 Oculto todo lo que siento','🫀 Siento las cosas con mucha intensidad'],
+      correct: 2
+    },
+    {
+      q: '¿Qué sueño tengo para mi futuro?',
+      opts: ['🚗 Tener el carro más caro','🌎 Ser famoso','🏠 Construir una vida junto a las personas que amo'],
+      correct: 2
+    }
+  ];
+
+  let quizScore = 0;
+  let quizAnswered = 0;
+
+  function buildQuiz() {
+    const container = document.getElementById('quizContainer');
+    container.innerHTML = '';
+    quizScore = 0; quizAnswered = 0;
+    document.getElementById('quizResult').classList.remove('show');
+    quizData.forEach((q, qi) => {
+      const qDiv = document.createElement('div');
+      qDiv.className = 'quiz-question';
+      qDiv.id = 'qq' + qi;
+      qDiv.innerHTML = `<div class="quiz-q-num">Pregunta ${qi+1} de ${quizData.length}</div>
+        <p class="quiz-q-text">${q.q}</p>
+        <div class="quiz-options">
+          ${q.opts.map((o,oi) => `<button class="quiz-opt" onclick="answerQuiz(${qi},${oi})">${o}</button>`).join('')}
+        </div>`;
+      container.appendChild(qDiv);
+    });
+  }
+
+  function answerQuiz(qi, oi) {
+    const qDiv = document.getElementById('qq' + qi);
+    if (qDiv.classList.contains('answered')) return;
+    qDiv.classList.add('answered');
+    const btns = qDiv.querySelectorAll('.quiz-opt');
+    btns.forEach(b => b.disabled = true);
+    if (oi === quizData[qi].correct) {
+      btns[oi].classList.add('correct');
+      quizScore++;
+    } else {
+      btns[oi].classList.add('wrong');
+      btns[quizData[qi].correct].classList.add('correct');
+    }
+    quizAnswered++;
+    if (quizAnswered === quizData.length) {
+      setTimeout(showQuizResult, 700);
+    }
+  }
+
+  function showQuizResult() {
+    const pct = Math.round((quizScore / quizData.length) * 100);
+    document.getElementById('quizScoreNum').textContent = pct + '%';
+    let msg = '';
+    if (pct <= 25) msg = 'Me acabas de conocer, ¿verdad? 😅';
+    else if (pct <= 50) msg = 'Sabes algunas cosas de mí, pero todavía quedan muchas historias por descubrir.';
+    else if (pct <= 75) msg = 'Me conoces bastante bien. Has prestado atención a detalles que muchos pasarían por alto.';
+    else if (pct <= 99) msg = 'Conoces mucho más de mí de lo que imaginaba. Gracias por tomarte el tiempo de entender quién soy.';
+    else msg = 'Felicidades. No solo conoces mis gustos; conoces partes de mi corazón que pocas personas han visto. Eres una persona exclusiva — seguro me haces feliz. ❤️';
+    document.getElementById('quizResultText').textContent = msg;
+    document.getElementById('quizResult').classList.add('show');
+    document.getElementById('quizResult').scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+
+  function restartQuiz() { buildQuiz(); }
+
+  buildQuiz();
+</script>
+</body>
+</html>
